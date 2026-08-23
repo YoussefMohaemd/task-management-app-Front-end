@@ -16,12 +16,12 @@ export default function SessionExpiredBanner({ visible, onDismiss }) {
     <div
       role="alert"
       className={cn(
-        'mb-6 flex flex-col gap-3 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3.5 sm:flex-row sm:items-center sm:justify-between'
+        'mb-6 flex flex-col gap-3 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3.5 sm:flex-row sm:items-center sm:justify-between dark:border-amber-500/30 dark:bg-amber-500/10'
       )}
     >
       <div className="flex items-start gap-3">
-        <InfoIcon aria-hidden="true" className="mt-0.5 h-5 w-5 shrink-0 text-amber-500" />
-        <p className="text-sm text-amber-800">
+        <InfoIcon aria-hidden="true" className="mt-0.5 h-5 w-5 shrink-0 text-amber-500 dark:text-amber-400" />
+        <p className="text-sm text-amber-800 dark:text-amber-200">
           Your session has expired. Please sign in again to continue.
         </p>
       </div>
@@ -37,7 +37,7 @@ export default function SessionExpiredBanner({ visible, onDismiss }) {
           type="button"
           onClick={onDismiss}
           aria-label="Dismiss notification"
-          className="rounded-lg p-2 text-amber-600 transition hover:bg-amber-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-300"
+          className="rounded-lg p-2 text-amber-600 transition hover:bg-amber-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-300 dark:text-amber-400 dark:hover:bg-amber-500/15"
         >
           <XMarkIcon className="h-4 w-4" />
         </button>

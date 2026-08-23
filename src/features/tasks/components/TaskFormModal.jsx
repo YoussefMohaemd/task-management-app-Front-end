@@ -149,7 +149,7 @@ export default function TaskFormModal({ open, task, onClose, onSubmit }) {
           />
         </div>
 
-        <div className="flex flex-col-reverse gap-2 border-t border-slate-100 px-5 py-4 sm:flex-row sm:justify-end sm:px-6">
+        <div className="flex flex-col-reverse gap-2 border-t border-slate-100 px-5 py-4 sm:flex-row sm:justify-end sm:px-6 dark:border-slate-800">
           <Button variant="secondary" onClick={onClose} disabled={submitting}>
             Cancel
           </Button>

@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../context/AuthContext';
+import { useToast } from '../../../context/ToastContext';
 import Input from '../../../components/ui/Input';
+import { PasswordInput } from '../../../components/ui/Input';
 import Button from '../../../components/ui/Button';
 import ErrorAlert from '../../../components/ui/ErrorAlert';
 import { validateLoginForm } from '../../../utils/validation';
@@ -10,6 +12,7 @@ const INITIAL_FORM = { email: '', password: '' };
 
 export default function LoginForm() {
   const { login } = useAuth();
+  const toast = useToast();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -39,9 +42,11 @@ export default function LoginForm() {
 
     try {
       await login({ email: form.email.trim(), password: form.password });
+      toast.success('Logged in successfully', 'Welcome back to TaskFlow.');
       const from = location.state?.from;
       navigate(from || '/tasks', { replace: true });
     } catch (error) {
+      toast.error('Authentication failed', error.message || 'Please check your credentials.');
       setFormError(error.message || 'Unable to log in. Please try again.');
     } finally {
       setSubmitting(false);
@@ -50,8 +55,8 @@ export default function LoginForm() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold tracking-tight text-slate-900">Welcome back</h1>
-      <p className="mt-1.5 text-sm text-slate-500">
+      <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">Welcome back</h1>
+      <p className="mt-1.5 text-sm text-slate-500 dark:text-slate-400">
         Sign in to manage your tasks.
       </p>
 
@@ -72,11 +77,10 @@ export default function LoginForm() {
           error={fieldErrors.email}
         />
 
-        <Input
+        <PasswordInput
           label="Password"
           id="login-password"
           name="password"
-          type="password"
           autoComplete="current-password"
           placeholder="Enter your password"
           value={form.password}
@@ -89,12 +93,12 @@ export default function LoginForm() {
         </Button>
       </form>
 
-      <p className="mt-6 text-center text-sm text-slate-500">
+      <p className="mt-6 text-center text-sm text-slate-500 dark:text-slate-400">
         Don&apos;t have an account?{' '}
         <Link
           to="/register"
           state={location.state}
-          className="font-semibold text-indigo-600 hover:text-indigo-500 hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-300 rounded"
+          className="rounded font-semibold text-indigo-600 hover:text-indigo-500 hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-300 dark:text-indigo-400 dark:hover:text-indigo-300"
         >
           Create one now
         </Link>

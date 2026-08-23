@@ -1,24 +1,42 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import * as taskService from '../services/taskService';
 import { useDebouncedValue } from './useDebouncedValue';
 import { useToast } from '../context/ToastContext';
+import {
+  DEFAULT_SORT_PRESET,
+  resolveSortParams,
+  resolveSortPreset,
+} from '../features/tasks/sortPresets';
+import { DEFAULT_PAGE_SIZE, normalizePageSize } from '../features/tasks/pagination';
 
 export const DEFAULT_FILTERS = { search: '', status: 'All', priority: 'All' };
 
-const buildQueryParams = ({ search, status, priority }) => ({
-  search: search.trim(),
-  status: status === 'All' ? undefined : status,
-  priority: priority === 'All' ? undefined : priority,
-});
+const SEARCH_DEBOUNCE_MS = 400;
 
 const countActiveFilters = ({ status, priority }) =>
   (status !== 'All' ? 1 : 0) + (priority !== 'All' ? 1 : 0);
 
 export function useTasks() {
   const toast = useToast();
+  const [searchParams, setSearchParams] = useSearchParams();
 
+  const urlSearch = searchParams.get('search') ?? '';
+  const urlStatus = searchParams.get('status') ?? 'All';
+  const urlPriority = searchParams.get('priority') ?? 'All';
+  const urlOverdue = searchParams.get('overdue') === 'true';
+  const sortPreset = resolveSortPreset(
+    searchParams.get('sortBy') ?? undefined,
+    searchParams.get('order') ?? undefined
+  );
+  const rawPage = Number.parseInt(searchParams.get('page'), 10);
+  const page = Number.isNaN(rawPage) || rawPage < 1 ? 1 : rawPage;
+  const pageSize = normalizePageSize(searchParams.get('limit'));
+
+  const [searchInput, setSearchInput] = useState(urlSearch);
   const [tasks, setTasks] = useState([]);
-  const [total, setTotal] = useState(0);
+  const [stats, setStats] = useState({ total: 0, toDo: 0, inProgress: 0, done: 0, overdue: 0 });
+  const [pagination, setPagination] = useState({ page: 1, limit: 20, total: 0, totalPages: 1 });
   const [loading, setLoading] = useState(true);
   const [updating, setUpdating] = useState(false);
   const [error, setError] = useState(null);
@@ -27,14 +45,48 @@ export function useTasks() {
   const [deleting, setDeleting] = useState(false);
   const [mutatingId, setMutatingId] = useState(null);
 
-  const [filters, setFilters] = useState(DEFAULT_FILTERS);
   const [taskPendingDeletion, setTaskPendingDeletion] = useState(null);
 
-  const debouncedSearch = useDebouncedValue(filters.search.trim(), 400);
+  const debouncedSearchInput = useDebouncedValue(searchInput.trim(), SEARCH_DEBOUNCE_MS);
+  const lastCommittedSearchRef = useRef(urlSearch);
+
+  const updateParams = useCallback(
+    (changes) => {
+      setSearchParams(
+        (current) => {
+          const next = new URLSearchParams(current);
+          Object.entries(changes).forEach(([key, value]) => {
+            if (value === null || value === undefined || value === '') {
+              next.delete(key);
+            } else {
+              next.set(key, value);
+            }
+          });
+          return next;
+        },
+        { replace: true }
+      );
+    },
+    [setSearchParams]
+  );
+
+  useEffect(() => {
+    if (debouncedSearchInput === lastCommittedSearchRef.current) return;
+    lastCommittedSearchRef.current = debouncedSearchInput;
+    updateParams({ search: debouncedSearchInput, page: null });
+  }, [debouncedSearchInput, updateParams]);
+
+  useEffect(() => {
+    if (urlSearch === lastCommittedSearchRef.current) return;
+    lastCommittedSearchRef.current = urlSearch;
+    setSearchInput(urlSearch);
+  }, [urlSearch]);
 
   const hasCompletedInitialLoadRef = useRef(false);
   const [reloadToken, setReloadToken] = useState(0);
   const refresh = useCallback(() => setReloadToken((token) => token + 1), []);
+
+  const { sortBy, order } = resolveSortParams(sortPreset);
 
   useEffect(() => {
     let isStale = false;
@@ -48,21 +100,26 @@ export function useTasks() {
       setError(null);
 
       try {
-        const result = await taskService.listTasks(
-          buildQueryParams({
-            search: debouncedSearch,
-            status: filters.status,
-            priority: filters.priority,
-          })
-        );
+        const result = await taskService.listTasks({
+          search: urlSearch,
+          status: urlStatus === 'All' ? undefined : urlStatus,
+          priority: urlPriority === 'All' ? undefined : urlPriority,
+          overdue: urlOverdue || undefined,
+          sortBy,
+          order,
+          page,
+          limit: pageSize,
+        });
         if (!isStale) {
           setTasks(result.tasks);
-          setTotal(result.total);
+          setStats(result.stats);
+          setPagination(result.pagination);
           hasCompletedInitialLoadRef.current = true;
         }
       } catch (loadError) {
         if (!isStale) {
           setError(loadError.message || 'Failed to load tasks.');
+          toast.error('Failed to load tasks', loadError.message);
         }
       } finally {
         if (!isStale) {
@@ -76,23 +133,55 @@ export function useTasks() {
     return () => {
       isStale = true;
     };
-  }, [debouncedSearch, filters.status, filters.priority, reloadToken]);
+  }, [urlSearch, urlStatus, urlPriority, urlOverdue, sortPreset, page, pageSize, reloadToken]);
 
-  const setSearch = useCallback((search) => {
-    setFilters((current) => ({ ...current, search }));
-  }, []);
+  const setSearch = useCallback((value) => setSearchInput(value), []);
 
-  const setStatusFilter = useCallback((status) => {
-    setFilters((current) => ({ ...current, status }));
-  }, []);
+  const setStatusFilter = useCallback(
+    (status) => updateParams({ status: status === 'All' ? null : status, page: null }),
+    [updateParams]
+  );
 
-  const setPriorityFilter = useCallback((priority) => {
-    setFilters((current) => ({ ...current, priority }));
-  }, []);
+  const setPriorityFilter = useCallback(
+    (priority) => updateParams({ priority: priority === 'All' ? null : priority, page: null }),
+    [updateParams]
+  );
+
+  const toggleOverdueFilter = useCallback(
+    () => updateParams({ overdue: urlOverdue ? null : 'true', page: null }),
+    [updateParams, urlOverdue]
+  );
+
+  const setSorting = useCallback(
+    (preset) => {
+      const next = resolveSortParams(preset);
+      updateParams({ sortBy: next.sortBy ?? null, order: next.order ?? null, page: null });
+    },
+    [updateParams]
+  );
+
+  const goToPage = useCallback((nextPage) => updateParams({ page: nextPage }), [updateParams]);
+
+  useEffect(() => {
+    if (loading || error) return;
+    if (tasks.length > 0 || pagination.total === 0 || page <= 1) return;
+    const lastValidPage = Math.max(Math.ceil(pagination.total / pageSize), 1);
+    if (page > lastValidPage) {
+      goToPage(lastValidPage);
+    }
+  }, [loading, error, tasks.length, pagination.total, page, pageSize, goToPage]);
+
+  const setPageSize = useCallback(
+    (size) =>
+      updateParams({ limit: normalizePageSize(size) === DEFAULT_PAGE_SIZE ? null : size, page: null }),
+    [updateParams]
+  );
 
   const clearFilters = useCallback(() => {
-    setFilters(DEFAULT_FILTERS);
-  }, []);
+    setSearchParams({}, { replace: true });
+    lastCommittedSearchRef.current = '';
+    setSearchInput('');
+  }, [setSearchParams]);
 
   const createTask = useCallback(
     async (payload) => {
@@ -162,12 +251,22 @@ export function useTasks() {
     }
   }, [refresh, taskPendingDeletion, toast]);
 
-  const activeFilters = countActiveFilters(filters);
-  const hasNoTasksAtAll = !error && total === 0 && activeFilters === 0 && !debouncedSearch;
+  const filters = {
+    search: searchInput,
+    status: urlStatus,
+    priority: urlPriority,
+    overdueOnly: urlOverdue,
+    sortPreset,
+  };
+  const activeFilters = countActiveFilters(filters) + (urlOverdue ? 1 : 0);
+  const hasNoTasksAtAll =
+    !error && pagination.total === 0 && activeFilters === 0 && !debouncedSearchInput && !urlSearch;
 
   return {
     tasks,
-    total,
+    stats,
+    pagination,
+    pageSize,
     loading,
     updating,
     error,
@@ -176,9 +275,13 @@ export function useTasks() {
     setSearch,
     setStatusFilter,
     setPriorityFilter,
+    toggleOverdueFilter,
+    setSorting,
+    goToPage,
+    setPageSize,
     clearFilters,
     activeFilters,
-    debouncedSearch,
+    debouncedSearch: debouncedSearchInput,
     hasNoTasksAtAll,
     saving,
     deleting,

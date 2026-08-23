@@ -121,3 +121,49 @@ export const SpinnerIcon = ({ className = '' }) => (
     />
   </svg>
 );
+
+export const EyeIcon = (props) => (
+  <Icon {...props}>
+    <path d="M2.5 12s3.5-6.5 9.5-6.5S21.5 12 21.5 12s-3.5 6.5-9.5 6.5S2.5 12 2.5 12Z" />
+    <circle cx="12" cy="12" r="2.8" />
+  </Icon>
+);
+
+export const EyeSlashIcon = (props) => (
+  <Icon {...props}>
+    <path d="M3 3l18 18" />
+    <path d="M10.6 5.1A9.8 9.8 0 0 1 12 5c6 0 9.5 7 9.5 7a17.4 17.4 0 0 1-2.4 3.2M6.6 6.6C4 8.3 2.5 12 2.5 12S6 19 12 19a9 9 0 0 0 4.2-1" />
+    <path d="M9.9 9.9a2.8 2.8 0 0 0 4 4" />
+  </Icon>
+);
+
+export const SunIcon = (props) => (
+  <Icon {...props}>
+    <circle cx="12" cy="12" r="4" />
+    <path d="M12 2v2m0 16v2M4.9 4.9l1.4 1.4m11.4 11.4 1.4 1.4M2 12h2m16 0h2M4.9 19.1l1.4-1.4m11.4-11.4 1.4-1.4" />
+  </Icon>
+);
+
+export const MoonIcon = (props) => (
+  <Icon {...props}>
+    <path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5a8.5 8.5 0 1 0 11 11Z" />
+  </Icon>
+);
+
+export const ChevronLeftIcon = (props) => (
+  <Icon {...props}>
+    <path d="m15 18-6-6 6-6" />
+  </Icon>
+);
+
+export const ChevronRightIcon = (props) => (
+  <Icon {...props}>
+    <path d="m9 18 6-6-6-6" />
+  </Icon>
+);
+
+export const ArrowPathIcon = (props) => (
+  <Icon {...props}>
+    <path d="M20 11A8 8 0 0 0 6.6 6.6L4 9m0-5v5h5m-5 1a8 8 0 0 0 13.4 4.4L20 15m0 5v-5h-5" />
+  </Icon>
+);

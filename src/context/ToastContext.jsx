@@ -6,16 +6,19 @@ const ToastContext = createContext(null);
 
 const TOAST_STYLES = {
   success: {
-    container: 'border-emerald-200 bg-emerald-50 text-emerald-800',
-    icon: 'text-emerald-500',
+    container:
+      'border-emerald-200 bg-emerald-50 text-emerald-800 dark:border-emerald-500/30 dark:bg-emerald-500/10 dark:text-emerald-200',
+    icon: 'text-emerald-500 dark:text-emerald-400',
   },
   error: {
-    container: 'border-rose-200 bg-rose-50 text-rose-800',
-    icon: 'text-rose-500',
+    container:
+      'border-rose-200 bg-rose-50 text-rose-800 dark:border-rose-500/30 dark:bg-rose-500/10 dark:text-rose-200',
+    icon: 'text-rose-500 dark:text-rose-400',
   },
   info: {
-    container: 'border-slate-200 bg-white text-slate-700',
-    icon: 'text-indigo-500',
+    container:
+      'border-slate-200 bg-white text-slate-700 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200',
+    icon: 'text-indigo-500 dark:text-indigo-400',
   },
 };
 
@@ -105,7 +108,7 @@ export function ToastProvider({ children }) {
                 type="button"
                 onClick={() => dismissToast(toast.id)}
                 aria-label="Dismiss notification"
-                className="shrink-0 rounded-md p-1 opacity-60 transition hover:bg-black/5 hover:opacity-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-400"
+                className="shrink-0 rounded-md p-1 opacity-60 transition hover:bg-black/5 hover:opacity-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 dark:hover:bg-white/10"
               >
                 <XMarkIcon aria-hidden="true" className="h-4 w-4" />
               </button>

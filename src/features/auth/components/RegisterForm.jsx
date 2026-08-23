@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../context/AuthContext';
+import { useToast } from '../../../context/ToastContext';
 import Input from '../../../components/ui/Input';
+import { PasswordInput } from '../../../components/ui/Input';
 import Button from '../../../components/ui/Button';
 import ErrorAlert from '../../../components/ui/ErrorAlert';
 import { validateRegisterForm } from '../../../utils/validation';
@@ -10,6 +12,7 @@ const INITIAL_FORM = { name: '', email: '', password: '', confirmPassword: '' };
 
 export default function RegisterForm() {
   const { register } = useAuth();
+  const toast = useToast();
   const navigate = useNavigate();
 
   const [form, setForm] = useState(INITIAL_FORM);
@@ -42,6 +45,7 @@ export default function RegisterForm() {
         email: form.email.trim(),
         password: form.password,
       });
+      toast.success('Account created', 'Welcome to TaskFlow.');
       navigate('/tasks', { replace: true });
     } catch (error) {
       if (error.fieldErrors && Object.keys(error.fieldErrors).length > 0) {
@@ -57,8 +61,8 @@ export default function RegisterForm() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold tracking-tight text-slate-900">Create your account</h1>
-      <p className="mt-1.5 text-sm text-slate-500">
+      <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">Create your account</h1>
+      <p className="mt-1.5 text-sm text-slate-500 dark:text-slate-400">
         Start organizing your tasks in less than a minute.
       </p>
 
@@ -91,11 +95,10 @@ export default function RegisterForm() {
           error={fieldErrors.email}
         />
 
-        <Input
+        <PasswordInput
           label="Password"
           id="register-password"
           name="password"
-          type="password"
           autoComplete="new-password"
           placeholder="Create a strong password"
           value={form.password}
@@ -104,11 +107,10 @@ export default function RegisterForm() {
           hint="At least 8 characters, with one letter and one number."
         />
 
-        <Input
+        <PasswordInput
           label="Confirm password"
           id="register-confirm-password"
           name="confirmPassword"
-          type="password"
           autoComplete="new-password"
           placeholder="Repeat your password"
           value={form.confirmPassword}
@@ -121,11 +123,11 @@ export default function RegisterForm() {
         </Button>
       </form>
 
-      <p className="mt-6 text-center text-sm text-slate-500">
+      <p className="mt-6 text-center text-sm text-slate-500 dark:text-slate-400">
         Already have an account?{' '}
         <Link
           to="/login"
-          className="font-semibold text-indigo-600 hover:text-indigo-500 hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-300 rounded"
+          className="rounded font-semibold text-indigo-600 hover:text-indigo-500 hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-300 dark:text-indigo-400 dark:hover:text-indigo-300"
         >
           Sign in
         </Link>

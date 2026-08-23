@@ -4,14 +4,51 @@
 
 @layer base {
   html {
-    @apply antialiased;
+    @apply antialiased scroll-smooth;
+    scrollbar-width: thin;
+    scrollbar-color: theme('colors.slate.300') transparent;
+  }
+
+  html.dark {
+    scrollbar-color: theme('colors.slate.600') transparent;
   }
 
   body {
-    @apply bg-slate-50 font-sans text-slate-800;
+    @apply bg-slate-50 font-sans text-slate-800 transition-colors duration-200 dark:bg-slate-950 dark:text-slate-200;
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
   }
 
   ::selection {
-    @apply bg-indigo-100 text-indigo-900;
+    @apply bg-indigo-600/90 text-white;
+  }
+
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply rounded-full border-2 border-solid border-transparent bg-slate-300 bg-clip-content dark:bg-slate-700;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-indigo-400 bg-clip-content dark:bg-indigo-500;
+  }
+}
+
+@layer utilities {
+  .text-gradient {
+    @apply bg-gradient-to-r from-indigo-500 via-violet-500 to-fuchsia-500 bg-clip-text text-transparent;
+  }
+
+  .bg-grid {
+    background-image:
+      linear-gradient(to right, rgb(15 23 42 / 0.045) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(15 23 42 / 0.045) 1px, transparent 1px);
+    background-size: 32px 32px;
   }
 }

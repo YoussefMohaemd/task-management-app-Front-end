@@ -2,12 +2,12 @@ import BrandLogo from '../BrandLogo';
 
 export default function FullScreenLoader() {
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center gap-6 bg-slate-50">
+    <div className="flex min-h-screen flex-col items-center justify-center gap-6 bg-slate-50 dark:bg-slate-950">
       <BrandLogo />
       <div
         role="status"
         aria-label="Loading application"
-        className="h-8 w-8 animate-spin rounded-full border-[3px] border-indigo-200 border-t-indigo-600"
+        className="h-8 w-8 animate-spin rounded-full border-[3px] border-indigo-200 border-t-indigo-600 dark:border-indigo-500/30 dark:border-t-indigo-400"
       />
     </div>
   );
