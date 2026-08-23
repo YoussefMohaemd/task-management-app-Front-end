@@ -98,7 +98,7 @@ export default function LoginForm() {
         <Link
           to="/register"
           state={location.state}
-          className="rounded font-semibold text-indigo-600 hover:text-indigo-500 hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-300 dark:text-indigo-400 dark:hover:text-indigo-300"
+          className="rounded font-semibold text-accent-700 hover:text-accent-600 hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-300 dark:text-accent-400 dark:hover:text-accent-300"
         >
           Create one now
         </Link>
@@ -106,3 +106,4 @@ export default function LoginForm() {
     </div>
   );
 }
+

@@ -7,18 +7,18 @@ const ToastContext = createContext(null);
 const TOAST_STYLES = {
   success: {
     container:
-      'border-emerald-200 bg-emerald-50 text-emerald-800 dark:border-emerald-500/30 dark:bg-emerald-500/10 dark:text-emerald-200',
+      'border-emerald-200 bg-emerald-50 text-emerald-800 dark:border-emerald-500/30 dark:bg-[#0F231C] dark:text-emerald-200',
     icon: 'text-emerald-500 dark:text-emerald-400',
   },
   error: {
     container:
-      'border-rose-200 bg-rose-50 text-rose-800 dark:border-rose-500/30 dark:bg-rose-500/10 dark:text-rose-200',
+      'border-rose-200 bg-rose-50 text-rose-800 dark:border-rose-500/30 dark:bg-[#2A1315] dark:text-rose-200',
     icon: 'text-rose-500 dark:text-rose-400',
   },
   info: {
     container:
-      'border-slate-200 bg-white text-slate-700 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200',
-    icon: 'text-indigo-500 dark:text-indigo-400',
+      'border-line bg-white text-ink-body dark:border-line-dark dark:bg-night-750 dark:text-ink',
+    icon: 'text-accent-600 dark:text-accent-400',
   },
 };
 
@@ -83,7 +83,7 @@ export function ToastProvider({ children }) {
       {children}
       <div
         aria-live="polite"
-        className="pointer-events-none fixed inset-x-0 top-4 z-[70] flex flex-col items-center gap-2 px-4 sm:items-end sm:px-6"
+        className="pointer-events-none fixed inset-x-0 top-[68px] z-[70] flex flex-col items-center gap-2 px-4 sm:items-end sm:px-6"
       >
         {toasts.map((toast) => {
           const Icon = TOAST_ICONS[toast.type] ?? InfoIcon;
@@ -93,7 +93,7 @@ export function ToastProvider({ children }) {
               key={toast.id}
               role="status"
               className={cn(
-                'pointer-events-auto flex w-full max-w-sm items-start gap-3 rounded-xl border px-4 py-3 shadow-lg transition-all',
+                'pointer-events-auto flex w-full max-w-sm animate-toast-in items-start gap-3 rounded-xl border px-4 py-3 shadow-lg',
                 styles.container
               )}
             >

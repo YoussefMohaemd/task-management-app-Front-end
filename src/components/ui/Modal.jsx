@@ -58,7 +58,7 @@ export default function Modal({ open, onClose, title, children, size = 'md' }) {
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center p-4 sm:items-center" role="presentation">
       <div
-        className="animate-fade-in absolute inset-0 bg-slate-900/40 backdrop-blur-sm dark:bg-slate-950/60"
+        className="animate-fade-in absolute inset-0 bg-[#0A1220]/50 backdrop-blur-sm dark:bg-night-950/70"
         onClick={onClose}
         aria-hidden="true"
       />
@@ -69,19 +69,19 @@ export default function Modal({ open, onClose, title, children, size = 'md' }) {
         aria-label={title}
         tabIndex={-1}
         className={cn(
-          'animate-scale-in relative w-full overflow-hidden rounded-3xl bg-white shadow-panel outline-none ring-1 ring-slate-900/5 dark:bg-slate-900 dark:ring-white/10',
+          'animate-scale-in relative w-full overflow-hidden rounded-2xl bg-white shadow-panel-light outline-none ring-1 ring-ink-heading/10 dark:bg-night-750 dark:shadow-panel dark:ring-line-dark',
           sizes[size]
         )}
       >
-        <div className="flex items-center justify-between border-b border-slate-100 px-5 py-4 sm:px-6 dark:border-slate-800">
-          <h2 className="text-base font-semibold text-slate-900 sm:text-lg dark:text-white">{title}</h2>
+        <div className="flex items-center justify-between border-b border-line px-5 py-3.5 sm:px-6 dark:border-line-dark">
+          <h2 className="text-[15px] font-semibold text-ink-heading dark:text-ink">{title}</h2>
           <button
             type="button"
             onClick={onClose}
             aria-label="Close dialog"
-            className="rounded-xl p-1.5 text-slate-400 transition hover:bg-slate-100 hover:text-slate-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-300 dark:hover:bg-slate-800 dark:hover:text-slate-300"
+            className="rounded-lg p-1.5 text-ink-faint transition hover:bg-slate-100 hover:text-ink-body focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-500 dark:hover:bg-night-700 dark:hover:text-ink-muted"
           >
-            <XMarkIcon className="h-5 w-5" />
+            <XMarkIcon className="h-[18px] w-[18px]" />
           </button>
         </div>
         {children}

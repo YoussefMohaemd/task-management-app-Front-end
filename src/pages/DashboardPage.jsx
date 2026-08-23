@@ -11,7 +11,7 @@ import ConfirmDialog from '../components/ui/ConfirmDialog';
 import ErrorAlert from '../components/ui/ErrorAlert';
 import EmptyState from '../components/ui/EmptyState';
 import Button from '../components/ui/Button';
-import { TaskGridSkeleton } from '../components/ui/Skeletons';
+import { TaskTableSkeleton } from '../components/ui/Skeletons';
 import { ClipboardListIcon, PlusIcon, SearchXIcon } from '../components/ui/icons';
 import { useAuth } from '../context/AuthContext';
 import { useTasks } from '../hooks/useTasks';
@@ -56,57 +56,52 @@ export default function DashboardPage() {
       <div className="flex flex-col gap-4">
         <SessionExpiredBanner visible={sessionExpired} onDismiss={dismissSessionExpired} />
 
-        <div className="flex flex-wrap items-end justify-between gap-3">
+        {/* Page header */}
+        <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <p className="text-[11px] font-semibold uppercase tracking-widest text-indigo-600 dark:text-indigo-400">
-              Dashboard
-            </p>
-            <h1 className="mt-1 text-xl font-bold tracking-tight text-slate-900 sm:text-2xl dark:text-white">
-              My Tasks
+            <h1 className="text-[22px] font-bold leading-tight tracking-tight text-ink-heading dark:text-white">
+              Task Management
             </h1>
-            <p className="mt-0.5 text-sm text-slate-500 dark:text-slate-400">
-              Welcome back{user?.name ? `, ${user.name.split(' ')[0]}` : ''}. Here is what you have
-              on your plate.
+            <p className="mt-0.5 text-[13px] text-ink-muted">
+              Overview and control of all active assignments
+              {user?.name ? (
+                <span className="hidden sm:inline">, {user.name.split(' ')[0]}</span>
+              ) : null}
+              .
             </p>
           </div>
+          <Button onClick={openCreateForm} className="shrink-0" aria-keyshortcuts="n">
+            <PlusIcon className="h-4 w-4" />
+            New Task
+          </Button>
         </div>
 
-        <CompletionProgress doneCount={tasks.stats.done} totalCount={tasks.stats.total} />
+        {/* Statistics */}
+        {!tasks.error ? <TaskStats stats={tasks.stats} /> : null}
 
-        {!tasks.loading && !tasks.error ? <TaskStats stats={tasks.stats} /> : null}
-
-        <div className="sticky top-[70px] z-20 -mx-1 px-1 py-0.5">
-          <TaskToolbar
-            filters={tasks.filters}
-            onSearchChange={tasks.setSearch}
-            onStatusChange={tasks.setStatusFilter}
-            onPriorityChange={tasks.setPriorityFilter}
-            onSortChange={tasks.setSorting}
-            onToggleOverdue={tasks.toggleOverdueFilter}
-            onCreateClick={openCreateForm}
-            activeFilters={tasks.activeFilters}
-            onClearFilters={tasks.clearFilters}
-            updating={tasks.updating}
-          />
-        </div>
-
-        {!tasks.loading && !tasks.error ? (
-          <p
-            aria-live="polite"
-            className="-mt-1 text-[11px] font-medium uppercase tracking-wide text-slate-400 dark:text-slate-500"
-          >
-            {tasks.pagination.total} {tasks.pagination.total === 1 ? 'task' : 'tasks'}
-            {tasks.activeFilters > 0 || tasks.debouncedSearch ? ' matching current view' : ''}
-          </p>
+        {/* Overall completion */}
+        {!tasks.error ? (
+          <CompletionProgress doneCount={tasks.stats.done} totalCount={tasks.stats.total} />
         ) : null}
+
+        {/* Toolbar / filters */}
+        <TaskToolbar
+          filters={tasks.filters}
+          onSearchChange={tasks.setSearch}
+          onStatusChange={tasks.setStatusFilter}
+          onPriorityChange={tasks.setPriorityFilter}
+          onSortChange={tasks.setSorting}
+          onToggleOverdue={tasks.toggleOverdueFilter}
+          activeFilters={tasks.activeFilters}
+          onClearFilters={tasks.clearFilters}
+          updating={tasks.updating}
+        />
 
         {tasks.error ? (
           <ErrorAlert title="Could not load your tasks" message={tasks.error} onRetry={tasks.retry} />
-        ) : null}
-
-        {tasks.loading ? (
-          <TaskGridSkeleton />
-        ) : !tasks.error && tasks.tasks.length === 0 ? (
+        ) : tasks.loading ? (
+          <TaskTableSkeleton />
+        ) : tasks.tasks.length === 0 ? (
           tasks.hasNoTasksAtAll ? (
             <EmptyState
               icon={ClipboardListIcon}
@@ -132,29 +127,28 @@ export default function DashboardPage() {
             />
           )
         ) : (
-          <div
-            className={
-              tasks.updating
-                ? 'pointer-events-none opacity-50 transition-opacity duration-200'
-                : 'transition-opacity duration-200'
-            }
-          >
-            <TaskList
-              tasks={tasks.tasks}
-              mutatingId={tasks.mutatingId}
-              onEdit={openEditForm}
-              onDelete={tasks.requestDeleteTask}
-              onStatusChange={tasks.changeStatus}
-            />
-            <div className="mt-4">
-              <TaskPagination
-                pagination={tasks.pagination}
-                onPageChange={tasks.goToPage}
-                onPageSizeChange={tasks.setPageSize}
-                pageSize={tasks.pageSize}
-                disabled={tasks.updating}
+          <div className="flex flex-col gap-3">
+            <div
+              className={
+                tasks.updating
+                  ? 'pointer-events-none opacity-50 transition-opacity duration-200'
+                  : 'transition-opacity duration-200'
+              }
+            >
+              <TaskList
+                tasks={tasks.tasks}
+                mutatingId={tasks.mutatingId}
+                onEdit={openEditForm}
+                onDelete={tasks.requestDeleteTask}
               />
             </div>
+            <TaskPagination
+              pagination={tasks.pagination}
+              onPageChange={tasks.goToPage}
+              onPageSizeChange={tasks.setPageSize}
+              pageSize={tasks.pageSize}
+              disabled={tasks.updating}
+            />
           </div>
         )}
       </div>

@@ -4,9 +4,9 @@ import BrandLogo from '../components/BrandLogo';
 
 export default function NotFoundPage() {
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-slate-50 px-4 dark:bg-slate-950">
+    <div className="flex min-h-screen flex-col items-center justify-center bg-[#F4F7FB] px-4 dark:bg-night-900">
       <BrandLogo />
-      <p className="mt-12 text-sm font-semibold uppercase tracking-widest text-indigo-600 dark:text-indigo-400">
+      <p className="mt-12 text-sm font-semibold uppercase tracking-widest text-accent-700 dark:text-accent-400">
         404 — Page not found
       </p>
       <h1 className="mt-3 max-w-md text-center text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl dark:text-white">
@@ -21,4 +21,5 @@ export default function NotFoundPage() {
     </div>
   );
 }
+
 

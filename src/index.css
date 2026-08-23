@@ -3,23 +3,40 @@
 @tailwind utilities;
 
 @layer base {
+  :root {
+    /* Light theme typography (rgb triplets for Tailwind alpha support) */
+    --ink-heading: 16 27 45; /* #101B2D */
+    --ink-body: 59 74 97; /* #3B4A61 */
+    --ink-muted: 93 109 133; /* #5D6D85 */
+    --ink-faint: 139 153 175; /* #8B99AF */
+  }
+
+  .dark {
+    /* Dark theme typography */
+    --ink-heading: 230 237 247; /* #E6EDF7 */
+    --ink-body: 196 208 224; /* #C4D0E0 */
+    --ink-muted: 147 164 186; /* #93A4BA */
+    --ink-faint: 113 128 152; /* #718098 */
+  }
+
   html {
     @apply antialiased scroll-smooth;
     scrollbar-width: thin;
-    scrollbar-color: theme('colors.slate.300') transparent;
+    scrollbar-color: #8b99af transparent;
   }
 
   html.dark {
-    scrollbar-color: theme('colors.slate.600') transparent;
+    scrollbar-color: #28374e transparent;
   }
 
   body {
-    @apply bg-slate-50 font-sans text-slate-800 transition-colors duration-200 dark:bg-slate-950 dark:text-slate-200;
+    /* Light: off-white page with a faint cool tint; Dark: deep navy page */
+    @apply bg-[#F4F7FB] font-sans text-ink-body transition-colors duration-200 dark:bg-night-900 dark:text-ink;
     font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
   }
 
   ::selection {
-    @apply bg-indigo-600/90 text-white;
+    @apply bg-accent-600/90 text-white dark:bg-accent-400/90 dark:text-night-900;
   }
 
   ::-webkit-scrollbar {
@@ -32,23 +49,23 @@
   }
 
   ::-webkit-scrollbar-thumb {
-    @apply rounded-full border-2 border-solid border-transparent bg-slate-300 bg-clip-content dark:bg-slate-700;
+    @apply rounded-full border-2 border-solid border-transparent bg-clip-content bg-ink-faint dark:bg-line-dark;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    @apply bg-indigo-400 bg-clip-content dark:bg-indigo-500;
+    @apply bg-clip-content bg-accent-600 dark:bg-line-dark-strong;
   }
 }
 
 @layer utilities {
   .text-gradient {
-    @apply bg-gradient-to-r from-indigo-500 via-violet-500 to-fuchsia-500 bg-clip-text text-transparent;
+    @apply bg-gradient-to-r from-accent-600 via-accent-500 to-sky-500 bg-clip-text text-transparent dark:from-accent-400 dark:via-accent-300 dark:to-sky-300;
   }
 
   .bg-grid {
     background-image:
-      linear-gradient(to right, rgb(15 23 42 / 0.045) 1px, transparent 1px),
-      linear-gradient(to bottom, rgb(15 23 42 / 0.045) 1px, transparent 1px);
+      linear-gradient(to right, rgb(16 27 45 / 0.045) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(16 27 45 / 0.045) 1px, transparent 1px);
     background-size: 32px 32px;
   }
 }

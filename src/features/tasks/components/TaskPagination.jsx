@@ -8,7 +8,7 @@ import {
 } from '../pagination';
 
 const pageButtonBase =
-  'inline-flex h-8 min-w-[2rem] items-center justify-center rounded-lg px-1.5 text-sm font-medium tabular-nums transition-colors duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-300 disabled:cursor-not-allowed disabled:opacity-40';
+  'inline-flex h-8 min-w-[2rem] items-center justify-center rounded-full px-1.5 text-[13px] font-medium tabular-nums transition-colors duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-500 disabled:cursor-not-allowed disabled:opacity-40';
 
 export default function TaskPagination({
   pagination,
@@ -28,18 +28,18 @@ export default function TaskPagination({
   return (
     <nav
       aria-label="Task pagination"
-      className="flex flex-col gap-2.5 border-t border-slate-100 pt-3 dark:border-slate-800 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between"
+      className="flex flex-col gap-2.5 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between"
     >
       <div className="flex items-center justify-between gap-3 sm:justify-start">
         <p
           data-testid="showing-range"
           aria-live="polite"
-          className="text-xs font-medium tabular-nums text-slate-500 dark:text-slate-400"
+          className="text-xs font-medium tabular-nums text-ink-muted"
         >
-          Showing <span className="font-semibold text-slate-700 dark:text-slate-200">{start}</span>
+          Showing <span className="font-semibold text-ink-body dark:text-ink">{start}</span>
           &ndash;
-          <span className="font-semibold text-slate-700 dark:text-slate-200">{end}</span> of{' '}
-          <span className="font-semibold text-slate-700 dark:text-slate-200">{total}</span>{' '}
+          <span className="font-semibold text-ink-body dark:text-ink">{end}</span> of{' '}
+          <span className="font-semibold text-ink-body dark:text-ink">{total}</span>{' '}
           {total === 1 ? 'task' : 'tasks'}
         </p>
 
@@ -51,7 +51,7 @@ export default function TaskPagination({
             value={String(pageSize ?? pagination.limit)}
             onChange={(event) => onPageSizeChange(Number(event.target.value))}
             disabled={disabled}
-            className="w-[6.5rem] [&_select]:h-8 [&_select]:py-1"
+            className="w-[6.25rem] shrink-0 [&>div>select]:h-8 [&>div>select]:py-0 [&>div>select]:text-xs"
           />
         ) : null}
       </div>
@@ -64,7 +64,7 @@ export default function TaskPagination({
           aria-label="Previous page"
           className={cn(
             pageButtonBase,
-            'mr-1 text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-white'
+            'mr-1 text-ink-muted hover:bg-slate-100 hover:text-ink-heading dark:text-ink-muted dark:hover:bg-night-700 dark:hover:text-ink'
           )}
         >
           <ChevronLeftIcon className="h-4 w-4" />
@@ -83,8 +83,8 @@ export default function TaskPagination({
                 className={cn(
                   pageButtonBase,
                   item === page
-                    ? 'bg-indigo-600 text-white shadow-sm shadow-indigo-600/30'
-                    : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-white'
+                    ? 'bg-accent-600 text-white shadow-sm shadow-accent-600/30 dark:bg-accent-400 dark:text-night-900 dark:shadow-none'
+                    : 'text-ink-muted hover:bg-slate-100 hover:text-ink-heading dark:text-ink-muted dark:hover:bg-night-700 dark:hover:text-ink'
                 )}
               >
                 {item}
@@ -93,7 +93,7 @@ export default function TaskPagination({
               <span
                 key={`ellipsis-${index}`}
                 aria-hidden="true"
-                className="px-1 text-sm font-medium text-slate-400 dark:text-slate-500"
+                className="px-1 text-sm font-medium text-ink-faint"
               >
                 {item}
               </span>
@@ -104,7 +104,7 @@ export default function TaskPagination({
         <p
           aria-live="polite"
           aria-label={`Page ${page} of ${totalPages}`}
-          className="text-sm font-semibold tabular-nums text-slate-600 sm:hidden dark:text-slate-300"
+          className="text-[13px] font-semibold tabular-nums text-ink-body sm:hidden dark:text-ink"
         >
           {page} / {totalPages}
         </p>
@@ -116,7 +116,7 @@ export default function TaskPagination({
           aria-label="Next page"
           className={cn(
             pageButtonBase,
-            'ml-1 text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-white'
+            'ml-1 text-ink-muted hover:bg-slate-100 hover:text-ink-heading dark:text-ink-muted dark:hover:bg-night-700 dark:hover:text-ink'
           )}
         >
           <ChevronRightIcon className="h-4 w-4" />

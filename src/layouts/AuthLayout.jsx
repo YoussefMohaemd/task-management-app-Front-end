@@ -9,15 +9,15 @@ const HIGHLIGHTS = [
 
 export default function AuthLayout({ children }) {
   return (
-    <div className="flex min-h-screen bg-white dark:bg-slate-950">
-      <aside className="relative hidden w-[44%] flex-col justify-between overflow-hidden bg-slate-950 p-10 lg:flex xl:p-14">
+    <div className="flex min-h-screen bg-[#F4F7FB] dark:bg-night-900">
+      <aside className="relative hidden w-[44%] flex-col justify-between overflow-hidden bg-night-850 p-10 lg:flex xl:p-14">
         <div
           aria-hidden="true"
-          className="animate-float pointer-events-none absolute -right-32 -top-32 h-[28rem] w-[28rem] rounded-full bg-gradient-to-br from-indigo-500/50 to-violet-600/40 blur-3xl"
+          className="animate-float pointer-events-none absolute -right-32 -top-32 h-[28rem] w-[28rem] rounded-full bg-gradient-to-br from-accent-500/50 to-sky-600/40 blur-3xl"
         />
         <div
           aria-hidden="true"
-          className="animate-float-delayed pointer-events-none absolute -bottom-40 -left-28 h-[26rem] w-[26rem] rounded-full bg-gradient-to-tr from-fuchsia-500/30 to-indigo-500/30 blur-3xl"
+          className="animate-float-delayed pointer-events-none absolute -bottom-40 -left-28 h-[26rem] w-[26rem] rounded-full bg-gradient-to-tr from-cyan-400/25 to-blue-500/30 blur-3xl"
         />
         <div
           aria-hidden="true"
@@ -29,7 +29,7 @@ export default function AuthLayout({ children }) {
         </div>
 
         <div className="relative">
-          <p className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3.5 py-1.5 text-xs font-medium tracking-wide text-indigo-200 backdrop-blur">
+          <p className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3.5 py-1.5 text-xs font-medium tracking-wide text-sky-200 backdrop-blur">
             <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
             Simple, fast and focused
           </p>
@@ -43,7 +43,7 @@ export default function AuthLayout({ children }) {
           <ul className="mt-8 space-y-3.5">
             {HIGHLIGHTS.map((highlight) => (
               <li key={highlight} className="flex items-start gap-3 text-sm text-slate-200">
-                <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-indigo-400 to-violet-500 shadow-glow">
+                <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-accent-400 to-sky-600 shadow-glow-accent">
                   <CheckIcon className="h-3 w-3" strokeWidth={2.5} />
                 </span>
                 {highlight}
